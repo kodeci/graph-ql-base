@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"ichabod/forms"
 	"ichabod/models"
 
 	"github.com/gin-gonic/gin"
@@ -17,88 +18,32 @@ func (ctrl ApplicationController) All(c *gin.Context) {
 	c.JSON(200, gin.H{"data": "get all applications results"})
 }
 
-// //getUserID ...
-// func getUserID(c *gin.Context) int64 {
-// 	session := sessions.Default(c)
-// 	userID := session.Get("user_id")
-// 	if userID != nil {
-// 		return models.ConvertToInt64(userID)
-// 	}
-// 	return 0
-// }
+//Create ...
+func (ctrl ApplicationController) Create(c *gin.Context) {
+	var createForm forms.CreateForm
 
-// //getSessionUserInfo ...
-// func getSessionUserInfo(c *gin.Context) (userSessionInfo models.UserSessionInfo) {
-// 	session := sessions.Default(c)
-// 	userID := session.Get("user_id")
-// 	if userID != nil {
-// 		userSessionInfo.ID = models.ConvertToInt64(userID)
-// 		userSessionInfo.Name = session.Get("user_name").(string)
-// 		userSessionInfo.Email = session.Get("user_email").(string)
-// 	}
-// 	return userSessionInfo
-// }
+	if c.BindJSON(&createForm) != nil {
+		c.JSON(406, gin.H{"message": "Invalid form", "form": createForm})
+		c.Abort()
+		return
+	}
 
-// //Signin ...
-// func (ctrl UserController) Signin(c *gin.Context) {
-// 	var signinForm forms.SigninForm
+	application, err := applicationModel.Create(createForm)
 
-// 	if c.BindJSON(&signinForm) != nil {
-// 		c.JSON(406, gin.H{"message": "Invalid form", "form": signinForm})
-// 		c.Abort()
-// 		return
-// 	}
+	if err != nil {
+		c.JSON(406, gin.H{"message": err.Error()})
+		c.Abort()
+		return
+	}
 
-// 	user, err := userModel.Signin(signinForm)
-// 	if err == nil {
-// 		session := sessions.Default(c)
-// 		session.Set("user_id", user.ID)
-// 		session.Set("user_email", user.Email)
-// 		session.Set("user_name", user.Name)
-// 		session.Save()
+	if application.ID > 0 {
+		// session := sessions.Default(c)
+		// session.Set("application_id", application.ID)
+		// session.Set("application_title", application.Title)
+		// session.Save()
+		c.JSON(200, gin.H{"message": "Success create", "application": application})
+	} else {
+		c.JSON(406, gin.H{"message": "Could not create applicaiton", "error": err.Error()})
+	}
 
-// 		c.JSON(200, gin.H{"message": "User signed in", "user": user})
-// 	} else {
-// 		c.JSON(406, gin.H{"message": "Invalid signin details", "error": err.Error()})
-// 	}
-
-// }
-
-// //Signup ...
-// func (ctrl UserController) Signup(c *gin.Context) {
-// 	var signupForm forms.SignupForm
-
-// 	if c.BindJSON(&signupForm) != nil {
-// 		c.JSON(406, gin.H{"message": "Invalid form", "form": signupForm})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	user, err := userModel.Signup(signupForm)
-
-// 	if err != nil {
-// 		c.JSON(406, gin.H{"message": err.Error()})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	if user.ID > 0 {
-// 		session := sessions.Default(c)
-// 		session.Set("user_id", user.ID)
-// 		session.Set("user_email", user.Email)
-// 		session.Set("user_name", user.Name)
-// 		session.Save()
-// 		c.JSON(200, gin.H{"message": "Success signup", "user": user})
-// 	} else {
-// 		c.JSON(406, gin.H{"message": "Could not signup this user", "error": err.Error()})
-// 	}
-
-// }
-
-// //Signout ...
-// func (ctrl UserController) Signout(c *gin.Context) {
-// 	session := sessions.Default(c)
-// 	session.Clear()
-// 	session.Save()
-// 	c.JSON(200, gin.H{"message": "Signed out..."})
-// }
+}

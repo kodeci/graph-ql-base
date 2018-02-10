@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"runtime"
 
 	"ichabod/controllers"
@@ -10,6 +12,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+//DefaultWriter ...
+var DefaultWriter io.Writer = os.Stdout
 
 //CORSMiddleware ...
 func CORSMiddleware() gin.HandlerFunc {
@@ -33,6 +38,8 @@ func CORSMiddleware() gin.HandlerFunc {
 func main() {
 	r := gin.Default()
 
+	r.Use(gin.Logger())
+
 	// store, _ := sessions.NewRedisStore(10, "tcp", "localhost:6379", "", []byte("secret"))
 	// r.Use(sessions.Sessions("ichabod-session", store))
 
@@ -43,10 +50,11 @@ func main() {
 	v1 := r.Group("/v1")
 	{
 		application := new(controllers.ApplicationController)
-		v1.GET("/applications", application.All)
+		v1.POST("/application", application.Create)
+		v1.GET("/application", application.All)
 
 		environment := new(controllers.EnvironmentController)
-		v1.GET("/environments", environment.All)
+		v1.GET("/environment", environment.All)
 	}
 
 	r.LoadHTMLGlob("./public/html/*")
@@ -64,5 +72,5 @@ func main() {
 		c.HTML(404, "404.html", gin.H{})
 	})
 
-	r.Run(":9000")
+	r.Run(":3000")
 }
