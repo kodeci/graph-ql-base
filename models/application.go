@@ -42,3 +42,9 @@ func (m ApplicationModel) Create(form forms.CreateForm) (application Application
 
 	return application, errors.New("Not Created")
 }
+
+//One ...
+func (m ApplicationModel) One(id int64) (application Application, err error) {
+	err = db.GetDB().SelectOne(&application, "SELECT id, title, created_at, updated_at FROM applications WHERE id = $1", id)
+	return application, err
+}

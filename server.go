@@ -51,7 +51,7 @@ func main() {
 	{
 		application := new(controllers.ApplicationController)
 		v1.POST("/application", application.Create)
-		v1.GET("/application", application.All)
+		v1.GET("/application/:id", application.One)
 
 		environment := new(controllers.EnvironmentController)
 		v1.GET("/environment", environment.All)

@@ -3,6 +3,7 @@ package controllers
 import (
 	"ichabod/forms"
 	"ichabod/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,13 +38,27 @@ func (ctrl ApplicationController) Create(c *gin.Context) {
 	}
 
 	if application.ID > 0 {
-		// session := sessions.Default(c)
-		// session.Set("application_id", application.ID)
-		// session.Set("application_title", application.Title)
-		// session.Save()
 		c.JSON(200, gin.H{"message": "Success create", "application": application})
 	} else {
 		c.JSON(406, gin.H{"message": "Could not create applicaiton", "error": err.Error()})
 	}
 
+}
+
+//One ...
+func (ctrl ApplicationController) One(c *gin.Context) {
+	applicationID := c.Param("id")
+
+	if id, err := strconv.ParseInt(applicationID, 10, 64); err == nil {
+
+		data, err := applicationModel.One(id)
+		if err != nil {
+			c.JSON(404, gin.H{"Message": "Application not found", "error": err.Error()})
+			c.Abort()
+			return
+		}
+		c.JSON(200, gin.H{"data": data})
+	} else {
+		c.JSON(404, gin.H{"Message": "Invalid parameter"})
+	}
 }
