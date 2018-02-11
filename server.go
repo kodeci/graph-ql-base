@@ -54,7 +54,8 @@ func main() {
 		v1.GET("/application/:id", application.One)
 
 		environment := new(controllers.EnvironmentController)
-		v1.GET("/environment", environment.All)
+		v1.POST("/application/:appId/environment", environment.Create)
+		// v1.GET("/application/:appId/environment/:envId", environment.Get)
 	}
 
 	r.LoadHTMLGlob("./public/html/*")
@@ -72,5 +73,5 @@ func main() {
 		c.HTML(404, "404.html", gin.H{})
 	})
 
-	r.Run(":3000")
+	r.Run("localhost:3000")
 }

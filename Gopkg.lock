@@ -31,16 +31,10 @@
   version = "v1.0.0"
 
 [[projects]]
-  name = "github.com/gorilla/context"
+  name = "github.com/gosimple/slug"
   packages = ["."]
-  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
-  version = "v1.1"
-
-[[projects]]
-  name = "github.com/gorilla/mux"
-  packages = ["."]
-  revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
-  version = "v1.6.1"
+  revision = "e9f42fa127660e552d0ad2b589868d403a9be7c6"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/json-iterator/go"
@@ -62,6 +56,12 @@
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/rainycape/unidecode"
+  packages = ["."]
+  revision = "cb7f23ec59bec0d61b19c56cd88cee3d0cc1870c"
 
 [[projects]]
   name = "github.com/ugorji/go"
@@ -90,6 +90,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "391faed1f0d0f48faab53e914cbc6641da5fe00ec8f5ccedce6ce364ddfba323"
+  inputs-digest = "d5ddb74025a311d70073f931c3e47c120606b3c689cc4189611307bdfba2f612"
   solver-name = "gps-cdcl"
   solver-version = 1

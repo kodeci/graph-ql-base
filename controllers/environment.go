@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"ichabod/models"
+	"strconv"
+
+	"ichabod/forms"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,34 +14,32 @@ type EnvironmentController struct{}
 
 var environmentModel = new(models.EnvironmentModel)
 
-// //Create ...
-// func (ctrl EnvironmentModel) Create(c *gin.Context) {
-// 	userID := getUserID(c)
+//Create ...
+func (ctrl EnvironmentController) Create(c *gin.Context) {
 
-// 	if userID == 0 {
-// 		c.JSON(403, gin.H{"message": "Please login first"})
-// 		c.Abort()
-// 		return
-// 	}
+	var environmentForm forms.EnvironmentCreateForm
 
-// 	var articleForm forms.ArticleForm
+	if c.BindJSON(&environmentForm) != nil {
+		c.JSON(406, gin.H{"message": "Invalid form", "form": environmentForm})
+		c.Abort()
+		return
+	}
 
-// 	if c.BindJSON(&articleForm) != nil {
-// 		c.JSON(406, gin.H{"message": "Invalid form", "form": articleForm})
-// 		c.Abort()
-// 		return
-// 	}
+	if appID, err := strconv.ParseInt(c.Param("appId"), 10, 64); err == nil {
 
-// 	articleID, err := environmentModel.Create(userID, articleForm)
+		env, err := environmentModel.Create(appID, environmentForm)
 
-// 	if articleID > 0 && err != nil {
-// 		c.JSON(406, gin.H{"message": "Article could not be created", "error": err.Error()})
-// 		c.Abort()
-// 		return
-// 	}
+		if err != nil {
+			c.JSON(500, gin.H{"Message": err})
+		} else {
+			c.JSON(201, gin.H{"Message": "Success", "Environment": env})
+		}
 
-// 	c.JSON(200, gin.H{"message": "Article created", "id": articleID})
-// }
+	} else {
+		c.JSON(400, gin.H{"Message": "Application ID invalid"})
+	}
+	return
+}
 
 //All ...
 func (ctrl EnvironmentController) All(c *gin.Context) {
