@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"ichabod/db"
 	"ichabod/forms"
-	"log"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -42,14 +41,16 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 		fmt.Println(string(emptyJSON))
 
 		var environmentID int
-		slug := slug.Make(form.Title)
+		var envSlug string
+		envSlug = form.Slug
+		if envSlug == "" {
+			envSlug = slug.Make(form.Title)
+		}
 
-		err = res.QueryRow(applicationID, form.Title, slug, string(emptyJSON)).Scan(&environmentID)
-		log.Println(err)
+		err = res.QueryRow(applicationID, form.Title, envSlug, string(emptyJSON)).Scan(&environmentID)
 
 		if err == nil {
 			err = getDb.SelectOne(&environment, "SELECT id, title, slug, values, updated_at, created_at FROM public.environments WHERE id=$1 LIMIT 1", environmentID)
-			log.Println(err)
 
 			if err == nil {
 				return environment, nil
