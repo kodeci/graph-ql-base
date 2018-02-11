@@ -20,7 +20,7 @@ type Application struct {
 type ApplicationModel struct{}
 
 //Create ...
-func (m ApplicationModel) Create(form forms.CreateForm) (application Application, err error) {
+func (m ApplicationModel) Create(form forms.ApplicationCreateForm) (application Application, err error) {
 	getDb := db.GetDB()
 
 	query := "INSERT INTO public.applications(title) VALUES($1) RETURNING id"

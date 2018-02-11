@@ -21,7 +21,7 @@ func (ctrl ApplicationController) All(c *gin.Context) {
 
 //Create ...
 func (ctrl ApplicationController) Create(c *gin.Context) {
-	var createForm forms.CreateForm
+	var createForm forms.ApplicationCreateForm
 
 	if c.BindJSON(&createForm) != nil {
 		c.JSON(406, gin.H{"message": "Invalid form", "form": createForm})
@@ -43,6 +43,7 @@ func (ctrl ApplicationController) Create(c *gin.Context) {
 		c.JSON(406, gin.H{"message": "Could not create applicaiton", "error": err.Error()})
 	}
 
+	return
 }
 
 //One ...
@@ -61,4 +62,6 @@ func (ctrl ApplicationController) One(c *gin.Context) {
 	} else {
 		c.JSON(404, gin.H{"Message": "Invalid parameter"})
 	}
+
+	return
 }
