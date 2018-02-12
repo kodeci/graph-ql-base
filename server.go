@@ -50,12 +50,13 @@ func main() {
 	v1 := r.Group("/v1")
 	{
 		application := new(controllers.ApplicationController)
-		v1.POST("/application", application.Create)
-		v1.GET("/application/:id", application.One)
-
 		environment := new(controllers.EnvironmentController)
+
+		v1.POST("/application", application.Create)
 		v1.POST("/application/:appId/environment", environment.Create)
-		// v1.GET("/application/:appId/environment/:envId", environment.Get)
+		v1.GET("/application/:appId/environment/:slug", environment.One)
+		v1.GET("/application/:appId", application.One)
+
 	}
 
 	r.LoadHTMLGlob("./public/html/*")

@@ -48,7 +48,7 @@ func (ctrl ApplicationController) Create(c *gin.Context) {
 
 //One ...
 func (ctrl ApplicationController) One(c *gin.Context) {
-	applicationID := c.Param("id")
+	applicationID := c.Param("appId")
 
 	if id, err := strconv.ParseInt(applicationID, 10, 64); err == nil {
 

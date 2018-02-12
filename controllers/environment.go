@@ -55,31 +55,25 @@ func (ctrl EnvironmentController) All(c *gin.Context) {
 	c.JSON(200, gin.H{"data": "get all results"})
 }
 
-// //One ...
-// func (ctrl ArticleController) One(c *gin.Context) {
-// 	userID := getUserID(c)
+//One ...
+func (ctrl EnvironmentController) One(c *gin.Context) {
 
-// 	if userID == 0 {
-// 		c.JSON(403, gin.H{"message": "Please login first"})
-// 		c.Abort()
-// 		return
-// 	}
+	appID := c.Param("appId")
+	slug := c.Param("slug")
 
-// 	id := c.Param("id")
+	if appID, err := strconv.ParseInt(appID, 10, 64); err == nil {
 
-// 	if id, err := strconv.ParseInt(id, 10, 64); err == nil {
-
-// 		data, err := environmentModel.One(userID, id)
-// 		if err != nil {
-// 			c.JSON(404, gin.H{"Message": "Article not found", "error": err.Error()})
-// 			c.Abort()
-// 			return
-// 		}
-// 		c.JSON(200, gin.H{"data": data})
-// 	} else {
-// 		c.JSON(404, gin.H{"Message": "Invalid parameter"})
-// 	}
-// }
+		data, err := environmentModel.Get(appID, slug)
+		if err != nil {
+			c.JSON(404, gin.H{"Message": "Environment not found", "error": err.Error()})
+			c.Abort()
+			return
+		}
+		c.JSON(200, gin.H{"data": data})
+	} else {
+		c.JSON(404, gin.H{"Message": "Invalid parameter"})
+	}
+}
 
 // //Update ...
 // func (ctrl ArticleController) Update(c *gin.Context) {

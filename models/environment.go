@@ -50,7 +50,7 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 		err = res.QueryRow(applicationID, form.Title, envSlug, string(emptyJSON)).Scan(&environmentID)
 
 		if err == nil {
-			err = getDb.SelectOne(&environment, "SELECT id, title, slug, values, updated_at, created_at FROM public.environments WHERE id=$1 LIMIT 1", environmentID)
+			err = getDb.SelectOne(&environment, "SELECT id, application_id, title, slug, values, updated_at, created_at FROM public.environments WHERE id=$1 LIMIT 1", environmentID)
 
 			if err == nil {
 				return environment, nil
@@ -63,11 +63,11 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 	return environment, errors.New("Environment Not Created")
 }
 
-//One ...
-// func (m EnvironmentModel) One(userID, id int64) (article Article, err error) {
-// 	err = db.GetDB().SelectOne(&article, "SELECT a.id, a.title, a.content, a.updated_at, a.created_at, json_build_object('id', u.id, 'name', u.name, 'email', u.email) AS user FROM public.article a LEFT JOIN public.user u ON a.user_id = u.id WHERE a.user_id=$1 AND a.id=$2 LIMIT 1", userID, id)
-// 	return article, err
-// }
+//Get ...
+func (m EnvironmentModel) Get(appID int64, slug string) (environment Environment, err error) {
+	err = db.GetDB().SelectOne(&environment, "SELECT id, title, slug, values, updated_at, created_at FROM public.environments WHERE application_id = $1 AND slug = $2 LIMIT 1", appID, slug)
+	return environment, err
+}
 
 // //All ...
 // func (m EnvironmentModel) All(userID int64) (articles []Article, err error) {
