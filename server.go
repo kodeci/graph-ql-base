@@ -53,9 +53,11 @@ func main() {
 		environment := new(controllers.EnvironmentController)
 
 		v1.POST("/application", application.Create)
+		v1.GET("/application/:appId", application.One)
+
 		v1.POST("/application/:appId/environment", environment.Create)
 		v1.GET("/application/:appId/environment/:slug", environment.One)
-		v1.GET("/application/:appId", application.One)
+		v1.POST("/application/:appId/environment/:slug", environment.Update)
 
 	}
 

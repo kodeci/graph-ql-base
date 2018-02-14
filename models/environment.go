@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"ichabod/db"
 	"ichabod/forms"
 	"time"
@@ -38,15 +37,14 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 		res, err := getDb.Prepare(query)
 
 		emptyJSON, _ := json.Marshal("")
-		fmt.Println(string(emptyJSON))
 
-		var environmentID int
 		var envSlug string
 		envSlug = form.Slug
 		if envSlug == "" {
 			envSlug = slug.Make(form.Title)
 		}
 
+		var environmentID int
 		err = res.QueryRow(applicationID, form.Title, envSlug, string(emptyJSON)).Scan(&environmentID)
 
 		if err == nil {
@@ -75,18 +73,38 @@ func (m EnvironmentModel) Get(appID int64, slug string) (environment Environment
 // 	return articles, err
 // }
 
-// //Update ...
-// func (m EnvironmentModel) Update(userID int64, id int64, form forms.ArticleForm) (err error) {
-// 	_, err = m.One(userID, id)
+//Update ...
+func (m EnvironmentModel) Update(appID int64, slug string, form forms.EnvironmentUpdateForm) (err error) {
 
-// 	if err != nil {
-// 		return errors.New("Article not found")
-// 	}
+	environment, err := m.Get(appID, slug)
 
-// 	_, err = db.GetDB().Exec("UPDATE public.article SET title=$1, content=$2, updated_at=$3 WHERE id=$4", form.Title, form.Content, time.Now().Unix(), id)
+	if err != nil {
+		return errors.New("Environment not found")
+	}
 
-// 	return err
-// }
+	// Set title off of incoming; if no incoming title, set with existing title
+	var title string
+	if title = form.Title; form.Title == "" {
+		title = environment.Title
+	}
+
+	if form.Key == "" || form.Value == "" {
+		return errors.New("Key/Value pair missing")
+	}
+
+	// TODO update to pull in existing values
+	valuesMAP := make(map[string]string)
+	valuesMAP[form.Key] = form.Value
+	values, err := json.Marshal(valuesMAP)
+
+	if err != nil {
+		return errors.New("key value pair failed")
+	}
+
+	_, err = db.GetDB().Exec("UPDATE public.environments SET title=$1, values=$2::json WHERE id=$3", title, string(values), environment.ID)
+
+	return err
+}
 
 // //Delete ...
 // func (m EnvironmentModel) Delete(userID, id int64) (err error) {

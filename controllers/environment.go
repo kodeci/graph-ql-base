@@ -75,38 +75,32 @@ func (ctrl EnvironmentController) One(c *gin.Context) {
 	}
 }
 
-// //Update ...
-// func (ctrl ArticleController) Update(c *gin.Context) {
-// 	userID := getUserID(c)
+//Update ...
+func (ctrl EnvironmentController) Update(c *gin.Context) {
 
-// 	if userID == 0 {
-// 		c.JSON(403, gin.H{"message": "Please login first"})
-// 		c.Abort()
-// 		return
-// 	}
+	slug := c.Param("slug")
 
-// 	id := c.Param("id")
-// 	if id, err := strconv.ParseInt(id, 10, 64); err == nil {
+	if appID, err := strconv.ParseInt(c.Param("appId"), 10, 64); err == nil {
 
-// 		var articleForm forms.ArticleForm
+		var environmentForm forms.EnvironmentUpdateForm
 
-// 		if c.BindJSON(&articleForm) != nil {
-// 			c.JSON(406, gin.H{"message": "Invalid parameters", "form": articleForm})
-// 			c.Abort()
-// 			return
-// 		}
+		if c.BindJSON(&environmentForm) != nil {
+			c.JSON(406, gin.H{"message": "Invalid parameters", "form": environmentForm})
+			c.Abort()
+			return
+		}
 
-// 		err := environmentModel.Update(userID, id, articleForm)
-// 		if err != nil {
-// 			c.JSON(406, gin.H{"Message": "Article could not be updated", "error": err.Error()})
-// 			c.Abort()
-// 			return
-// 		}
-// 		c.JSON(200, gin.H{"message": "Article updated"})
-// 	} else {
-// 		c.JSON(404, gin.H{"Message": "Invalid parameter", "error": err.Error()})
-// 	}
-// }
+		err := environmentModel.Update(appID, slug, environmentForm)
+		if err != nil {
+			c.JSON(406, gin.H{"Message": "Environment could not be updated", "error": err.Error()})
+			c.Abort()
+			return
+		}
+		c.JSON(200, gin.H{"message": "Environment updated"})
+	} else {
+		c.JSON(404, gin.H{"Message": "Invalid parameter", "error": err.Error()})
+	}
+}
 
 // //Delete ...
 // func (ctrl ArticleController) Delete(c *gin.Context) {
