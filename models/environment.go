@@ -5,6 +5,7 @@ import (
 	"errors"
 	"ichabod/db"
 	"ichabod/forms"
+	"log"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -16,9 +17,10 @@ type Environment struct {
 	ApplicationID int64           `db:"application_id" json:"application_id"`
 	Title         string          `db:"title" json:"title"`
 	Slug          string          `db:"slug" json:"slug"`
-	Values        json.RawMessage `db:"values" json:"values"`
-	UpdatedAt     time.Time       `db:"updated_at" json:"updated_at"`
-	CreatedAt     time.Time       `db:"created_at" json:"created_at"`
+	Data          json.RawMessage `db:"data" json:"data"`
+	Values        map[string]string
+	UpdatedAt     time.Time `db:"updated_at" json:"updated_at"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
 }
 
 //EnvironmentModel ...
@@ -33,7 +35,7 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 	_, err = applicationModel.One(applicationID)
 
 	if err == nil {
-		query := "INSERT INTO public.environments(application_id, title, slug, values) VALUES ($1, $2, $3, $4::jsonb) RETURNING id"
+		query := "INSERT INTO public.environments(application_id, title, slug, data) VALUES ($1, $2, $3, $4::jsonb) RETURNING id"
 		res, err := getDb.Prepare(query)
 
 		emptyJSON, _ := json.Marshal("")
@@ -48,7 +50,7 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 		err = res.QueryRow(applicationID, form.Title, envSlug, string(emptyJSON)).Scan(&environmentID)
 
 		if err == nil {
-			err = getDb.SelectOne(&environment, "SELECT id, application_id, title, slug, values, updated_at, created_at FROM public.environments WHERE id=$1 LIMIT 1", environmentID)
+			err = getDb.SelectOne(&environment, "SELECT id, application_id, title, slug, data, updated_at, created_at FROM public.environments WHERE id=$1 LIMIT 1", environmentID)
 
 			if err == nil {
 				return environment, nil
@@ -63,7 +65,7 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 
 //Get ...
 func (m EnvironmentModel) Get(appID int64, slug string) (environment Environment, err error) {
-	err = db.GetDB().SelectOne(&environment, "SELECT id, title, slug, values, updated_at, created_at FROM public.environments WHERE application_id = $1 AND slug = $2 LIMIT 1", appID, slug)
+	err = db.GetDB().SelectOne(&environment, "SELECT id, title, slug, data, updated_at, created_at FROM public.environments WHERE application_id = $1 AND slug = $2 LIMIT 1", appID, slug)
 	return environment, err
 }
 
@@ -77,6 +79,8 @@ func (m EnvironmentModel) Get(appID int64, slug string) (environment Environment
 func (m EnvironmentModel) Update(appID int64, slug string, form forms.EnvironmentUpdateForm) (err error) {
 
 	environment, err := m.Get(appID, slug)
+
+	log.Println(err)
 
 	if err != nil {
 		return errors.New("Environment not found")
@@ -92,16 +96,16 @@ func (m EnvironmentModel) Update(appID int64, slug string, form forms.Environmen
 		return errors.New("Key/Value pair missing")
 	}
 
-	// TODO update to pull in existing values
-	valuesMAP := make(map[string]string)
-	valuesMAP[form.Key] = form.Value
-	values, err := json.Marshal(valuesMAP)
+	json.Unmarshal(environment.Data, &environment.Values)
+
+	environment.Values[form.Key] = form.Value
+	values, err := json.Marshal(environment.Values)
 
 	if err != nil {
 		return errors.New("key value pair failed")
 	}
 
-	_, err = db.GetDB().Exec("UPDATE public.environments SET title=$1, values=$2::json WHERE id=$3", title, string(values), environment.ID)
+	_, err = db.GetDB().Exec("UPDATE public.environments SET title=$1, data=$2::json WHERE id=$3", title, string(values), environment.ID)
 
 	return err
 }
