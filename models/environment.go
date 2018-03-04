@@ -76,7 +76,7 @@ func (m EnvironmentModel) Get(appID int64, slug string) (environment Environment
 // }
 
 //Update ...
-func (m EnvironmentModel) Update(appID int64, slug string, form forms.EnvironmentUpdateForm) (err error) {
+func (m EnvironmentModel) Update(appID int64, slug string, title string, key string, value string) (err error) {
 
 	environment, err := m.Get(appID, slug)
 
@@ -87,18 +87,18 @@ func (m EnvironmentModel) Update(appID int64, slug string, form forms.Environmen
 	}
 
 	// Set title off of incoming; if no incoming title, set with existing title
-	var title string
-	if title = form.Title; form.Title == "" {
+	if title == "" {
 		title = environment.Title
 	}
 
-	if form.Key == "" || form.Value == "" {
+	// if title is set, just update the title; otherwise update key/value pair
+	if title != "" && key == "" || value == "" {
 		return errors.New("Key/Value pair missing")
 	}
 
 	json.Unmarshal(environment.Data, &environment.Values)
 
-	environment.Values[form.Key] = form.Value
+	environment.Values[key] = value
 	values, err := json.Marshal(environment.Values)
 
 	if err != nil {

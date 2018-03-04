@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"ichabod/models"
+	"log"
 	"strconv"
 
 	"ichabod/forms"
@@ -80,17 +81,16 @@ func (ctrl EnvironmentController) Update(c *gin.Context) {
 
 	slug := c.Param("slug")
 
+	key, _ := c.GetPostForm("key")
+	value, _ := c.GetPostForm("value")
+	title, _ := c.GetPostForm("title")
+
+	log.Println(key)
+	log.Println(value)
+
 	if appID, err := strconv.ParseInt(c.Param("appId"), 10, 64); err == nil {
 
-		var environmentForm forms.EnvironmentUpdateForm
-
-		if c.BindJSON(&environmentForm) != nil {
-			c.JSON(406, gin.H{"message": "Invalid parameters", "form": environmentForm})
-			c.Abort()
-			return
-		}
-
-		err := environmentModel.Update(appID, slug, environmentForm)
+		err := environmentModel.Update(appID, slug, title, key, value)
 		if err != nil {
 			c.JSON(406, gin.H{"Message": "Environment could not be updated", "error": err.Error()})
 			c.Abort()
