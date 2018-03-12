@@ -38,10 +38,13 @@ func (m EnvironmentModel) Create(applicationID int64, form forms.EnvironmentCrea
 		query := "INSERT INTO public.environments(application_id, title, slug, data) VALUES ($1, $2, $3, $4::jsonb) RETURNING id"
 		res, err := getDb.Prepare(query)
 
+		if err != nil {
+			return environment, errors.New("Error occured")
+		}
+
 		emptyJSON, _ := json.Marshal("")
 
-		var envSlug string
-		envSlug = form.Slug
+		envSlug := form.Slug
 		if envSlug == "" {
 			envSlug = slug.Make(form.Title)
 		}
@@ -80,7 +83,7 @@ func (m EnvironmentModel) Update(appID int64, slug string, title string, key str
 
 	environment, err := m.Get(appID, slug)
 
-	log.Println(err)
+	log.Println(environment)
 
 	if err != nil {
 		return errors.New("Environment not found")
@@ -98,6 +101,9 @@ func (m EnvironmentModel) Update(appID int64, slug string, title string, key str
 
 	json.Unmarshal(environment.Data, &environment.Values)
 
+	if environment.Values == nil {
+		environment.Values = make(map[string]string)
+	}
 	environment.Values[key] = value
 	values, err := json.Marshal(environment.Values)
 
