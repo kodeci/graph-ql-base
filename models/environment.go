@@ -3,9 +3,9 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"ichabod/db"
 	"ichabod/forms"
-	"log"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -83,8 +83,6 @@ func (m EnvironmentModel) Update(appID int64, slug string, title string, key str
 
 	environment, err := m.Get(appID, slug)
 
-	log.Println(environment)
-
 	if err != nil {
 		return errors.New("Environment not found")
 	}
@@ -106,6 +104,32 @@ func (m EnvironmentModel) Update(appID int64, slug string, title string, key str
 	}
 	environment.Values[key] = value
 	values, err := json.Marshal(environment.Values)
+
+	var dat map[string]interface{}
+	if err := json.Unmarshal(values, &dat); err != nil {
+		panic(err)
+	}
+	fmt.Println(dat)
+	num := dat["key"].(string)
+	fmt.Println(num)
+
+	// #TODO
+	a := map[string]interface{}{
+		"key": "value",
+	}
+	fmt.Println(a)
+
+	var f interface{}
+	f = map[string]interface{}{
+		"Name": "Wednesday",
+		"Age":  6,
+		"Parents": []interface{}{
+			"Gomez",
+			"Morticia",
+		},
+	}
+	b := f.(map[string]interface{})
+	fmt.Println(b)
 
 	if err != nil {
 		return errors.New("key value pair failed")

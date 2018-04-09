@@ -1,0 +1,70 @@
+{
+  "environment": {
+    "ASSESSMENT_BUCKET": "olay-assessments-stage",
+    "AUTH_DB_DATABASE": "olay_auth",
+    "AUTH_DB_HOST": "serverless-olay-stage.c1fi5gnefm1p.us-east-1.rds.amazonaws.com",
+    "AUTH_DB_PASSWORD": "alchemypg",
+    "AUTH_DB_USER": "olay_api_stage",
+    "BUCKET_NAME": "olay-report-images-dev",
+    "CACHE_HOST": "serverless-stage.axipel.0001.use1.cache.amazonaws.com",
+    "CONSUMER_DB_DATABASE": "olay_consumer",
+    "CONSUMER_DB_HOST": "serverless-olay-stage.c1fi5gnefm1p.us-east-1.rds.amazonaws.com",
+    "CONSUMER_DB_PASSWORD": "alchemypg",
+    "CONSUMER_DB_USER": "olay_api_stage",
+    "COUNTRY_CODE": "us",
+    "CTL_IMAGE_URL": "http://stageskinadvisorapi.pgsitecore.com/api/apiimage",
+    "CTL_PASSWORD": "F8u39v%3",
+    "CTL_USERNAME": "skinadvisor",
+    "DEBUG": "olay:api:auth,olay:ext:grs,olay:ext:nara,olay:heartbeat,olay:api:consumer,nara:sdk,olay:api:anon,olay:privacy",
+    "DEMANDWARE_CLIENT_ID": "3ef39a4f-90c0-4b49-8827-2e50d01e0432",
+    "DEMANDWARE_URL": "http://shop.olay.com/s/OlAY/dw/shop/v16_9/products",
+    "DMC_MESSAGE_ID": 6000118145,
+    "DMC_DATA_SOURCE_ID": 1,
+    "ELASTICSEARCH_HOST": "https://vpc-olay-logger-q3v4k2yiefs3h3nvosnosi6qkq.us-east-1.es.amazonaws.com",
+    "GRS_APP_ID": 500,
+    "GRS_EMAIL_OPTIN": 453,
+    "GRS_PASSWORD": "5WNp&Qet",
+    "GRS_REGISTER_TRAIT": "OT-OLYUS-NA-EN-OtherReg-SkinAdvisor--",
+    "GRS_SSO_GROUP": 2,
+    "GRS_SSO_PASSWORD": "B@!='pm(se77<;\\3",
+    "GRS_URL": "https://stage.grs-pg.com",
+    "GRS_SSO_LOGOUT_URL": "https://stage.sso.grs-pg.com",
+    "GRS_USER": "olay_500_enus",
+    "HEARTBEAT_EMAIL": "heartbeat@alchemy.codes",
+    "HEARTBEAT_PASSWORD": "password123",
+    "IMAGE_CDN": "https://olay-report-cdn-dev.alchemy.codes",
+    "NARA_CATEGORY": "compass",
+    "NARA_CLIENT_ID": "mdev",
+    "NARA_CLIENT_SECRET": "VUCTj2y9iwe174ebZj2KBzkV2VepbT",
+    "NARA_HOST": "pg.platform.naralogics.com",
+    "NODE_ENV": "production",
+    "ENABLE_SKIN_FEEL": true,
+    "ONECP_SYNC_ARN": "arn:aws:sns:us-east-1:541271753024:olay-1cp-sync-stage",
+    "PRODUCT_BUCKET_NAME": "olay-product-images",
+    "PRODUCT_FEED": "http://www.olay.com/en-us/productdetailfeed",
+    "PRODUCT_IMAGE_CDN": "https://olay-product-images.alchemy.codes",
+    "REMOVE_ANON_SELFIES": true,
+    "REMOVE_IMAGE_ARN": "arn:aws:sns:us-east-1:541271753024:olay-remove-image-stage",
+    "SELFIE_BUCKET_NAME": "olay-raw-images-stage-uk",
+    "SAVE_IMAGE_ARN": "arn:aws:sns:us-east-1:541271753024:olay-save-image-stage",
+    "SKYNET_CLIENT_ID": "OKd0NhFuL3nzqgEstelV9qoP",
+    "SKYNET_CLIENT_SECRET": "lHCovmePOn1TPxXqFZuTqRgbQ0tmm-3u",
+    "SKYNET_HOST": "https://skynet.staging.alchemy.codes",
+    "VISAGE_ARN": "arn:aws:lambda:us-east-1:541271753024:function:visage-api-stage-selfie",
+    "WALMART_API_KEY": "q9wcpvvb6h4ysre9vhm7yyvc"
+  },
+  "aws": {
+    "role": "arn:aws:iam::541271753024:role/serverless-lambda-role-test",
+    "vpc": {
+      "securityGroupIds": [
+        "sg-6dcf5b11"
+      ],
+      "subnetIds": [
+        "subnet-16c98d4d",
+        "subnet-ed155cc0",
+        "subnet-260b871a",
+        "subnet-7e764837"
+      ]
+    }
+  }
+}
