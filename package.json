@@ -1,0 +1,27 @@
+{
+  "name": "ichabod",
+  "version": "1.0.0",
+  "description": "headless environment management system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nogorilla/ichabod.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nogorilla/ichabod/issues"
+  },
+  "homepage": "https://github.com/nogorilla/ichabod#readme",
+  "dependencies": {
+    "apollo-server-koa": "^1.3.4",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^2.23.1",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0"
+  }
+}
